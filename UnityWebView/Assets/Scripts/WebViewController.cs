@@ -76,6 +76,12 @@ public class WebViewController : MonoBehaviour
             // コールバック。
             cb:(msg) => 
             {
+                var urlScheme = WebViewURLController.GetUri(msg);
+                if(urlScheme.Scheme == "file" || urlScheme.Scheme == "http" || urlScheme.Scheme == "https")
+                {
+                    webView.LoadURL(msg);
+                    return;
+                }
                 WebViewURLController.ProcessURL(msg, Close, webViewData.CustomCallbackData);
             },
 
@@ -100,7 +106,9 @@ public class WebViewController : MonoBehaviour
             // ロード完了後。
             ld:(msg) =>
             {
-                Debug.Log(msg);
+                webView.EvaluateJS(@"
+                    document.body.style.background = 'white';
+                ");
                 if(webViewData.OnOpenCallback != null)
                 {
                     webViewData.OnOpenCallback();

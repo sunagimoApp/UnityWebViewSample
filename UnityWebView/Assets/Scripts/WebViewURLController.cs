@@ -13,12 +13,12 @@ public class WebViewURLController
     /// <summary>
     /// WebViewを閉じるスキーム名。
     /// </summary>
-    const string WEBVIEW_CLOSE_SCHEME = "webview_close";
+    const string WEBVIEW_CLOSE_SCHEME = "webview-close";
     
     /// <summary>
     /// ブラウザで開くスキーム名。
     /// </summary>
-    const string BROWSER_OPEN = "browser_open";
+    const string BROWSER_OPEN = "browser-open";
 
     /// <summary>
     /// WebViewを閉じる処理。
@@ -53,6 +53,7 @@ public class WebViewURLController
         {
             var unityReplaceSb = new System.Text.StringBuilder(url);
             unityReplaceSb.Replace(uri.GetLeftPart(System.UriPartial.Scheme), "");
+            url = unityReplaceSb.ToString();
             uri = GetUri(url);
         }
 
@@ -86,7 +87,7 @@ public class WebViewURLController
     /// </summary>
     /// <param name="url">URL。</param>
     /// <returns>Uri</returns>
-    static Uri GetUri(string url)
+    static public Uri GetUri(string url)
     {
         System.Uri uri;
         try
@@ -100,7 +101,7 @@ public class WebViewURLController
         }
         finally
         {
-            Debug.Log("url: " + url);
+            Debug.Log(url);
         }
         return uri;
     }

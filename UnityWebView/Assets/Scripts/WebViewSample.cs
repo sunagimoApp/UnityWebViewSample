@@ -46,8 +46,7 @@ public class WebViewSample : MonoBehaviour
     void OpenWebView()
     {
         var webViewData = new WebViewData();
-        // webViewData.Url = "file://" + System.IO.Path.Combine(Application.streamingAssetsPath, "WebPageSample.html");
-        webViewData.Url = "jar:file://" + System.IO.Path.Combine(Application.persistentDataPath, "WebPageSample.html");
+        webViewData.Url = GetLocalFilePath("WebViewSample.html");
         webViewData.OnOpenCallback = () => statusLbl.text = "Open";
         webViewData.OnCloseCallback = () => statusLbl.text = "Close";
         webView.Open(webViewData);
@@ -59,5 +58,19 @@ public class WebViewSample : MonoBehaviour
     void CloseWebView()
     {
         webView.Close();
+    }
+
+    /// <summary>
+    /// ローカルのファイルパスを取得。
+    /// </summary>
+    /// <param name="fileName">ファイル名。</param>
+    /// <returns>ローカルのファイルパス。</returns>
+    string GetLocalFilePath(string fileName)
+    {
+#if UNITY_ANDROID && !UNITY_EDITOR
+        return System.IO.Path.Combine("file:///android_asset/", fileName);
+#else
+        return System.IO.Path.Combine("file://" + Application.streamingAssetsPath, fileName);
+#endif
     }
 }
