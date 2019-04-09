@@ -36,28 +36,28 @@ public class WebViewSample : MonoBehaviour
 
     void Start()
     {
-        openButton.onClick.AddListener(OpenWebView);
-        closeButton.onClick.AddListener(CloseWebView);
+        openButton.onClick.AddListener(OnOpenWebView);
+        closeButton.onClick.AddListener(OnCloseWebView);
     }
 
     /// <summary>
     /// WebViewを開く。
     /// </summary>
-    void OpenWebView()
+    void OnOpenWebView()
     {
         var webViewData = new WebViewData();
         webViewData.Url = GetLocalFilePath("WebViewSample.html");
-        webViewData.OnOpenCallback = () => statusLbl.text = "Open";
-        webViewData.OnCloseCallback = () => statusLbl.text = "Close";
-        webView.Open(webViewData);
+        webViewData.OnOpened = () => statusLbl.text = "Open";
+        webViewData.OnClosed = () => statusLbl.text = "Close";
+        webView.OpenWebView(webViewData);
     }
 
     /// <summary>
     /// WebViewを閉じる。
     /// </summary>
-    void CloseWebView()
+    void OnCloseWebView()
     {
-        webView.Close();
+        webView.CloseWebView();
     }
 
     /// <summary>

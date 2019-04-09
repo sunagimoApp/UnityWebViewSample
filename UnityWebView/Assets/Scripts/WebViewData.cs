@@ -10,19 +10,19 @@ public class WebViewData
     public string Url { get; set; }
 
     /// <summary>
-    /// 開いた後のコールバック。
+    /// 開いた後のイベント。
     /// </summary>
-    public System.Action OnOpenCallback { get; set; }
+    public System.Action OnOpened { get; set; }
 
     /// <summary>
-    /// 閉じた後のコールバック。
+    /// 閉じた後のイベント。
     /// </summary>
-    public System.Action OnCloseCallback { get; set; }
+    public System.Action OnClosed { get; set; }
 
     /// <summary>
-    /// エラーコールバック。
+    /// エラー時イベント。
     /// </summary>
-    public System.Action<WebViewStatus> OnErrorCallback { get; set; }
+    public System.Action<WebViewStatus> OnError { get; set; }
 
     /// <summary>
     /// カスタムコールバックデータ。

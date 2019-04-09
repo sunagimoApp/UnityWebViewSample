@@ -20,33 +20,33 @@ public class WebViewController : MonoBehaviour
     /// <summary>
     /// WebViewを閉じたときのコールバック。
     /// </summary>
-    event System.Action OnCompleteCloseCallback = delegate{};
+    event System.Action OnClosedWebView = delegate{};
 
     /// <summary>
     /// WebViewを開く。
     /// </summary>
     /// <param name="url">Url。</param>
-    public void Open(string url)
+    public void OpenWebView(string url)
     {
         var webViewData = new WebViewData();
         webViewData.Url = url;
-        Open(webViewData);
+        OpenWebView(webViewData);
     }
 
     /// <summary>
     /// WebViewを開く。
     /// </summary>
     /// <param name="webViewData">WebViewData。</param>
-    public void Open(WebViewData webViewData)
+    public void OpenWebView(WebViewData webViewData)
     {
-        StartCoroutine(OpenCoroutine(webViewData));
+        StartCoroutine(OpenWebViewCoroutine(webViewData));
     }
 
     /// <summary>
     /// WebView開くコルーチン。
     /// </summary>
     /// <param name="webViewData">WebViewData。</param>
-    IEnumerator OpenCoroutine(WebViewData webViewData)
+    IEnumerator OpenWebViewCoroutine(WebViewData webViewData)
     {
         if(webViewCanvas == null)
         {
@@ -63,9 +63,9 @@ public class WebViewController : MonoBehaviour
             webView = webViewObject.AddComponent<WebViewObject>();
         }
 
-        if(webViewData.OnCloseCallback != null)
+        if(webViewData.OnClosed != null)
         {
-            OnCompleteCloseCallback = webViewData.OnCloseCallback;
+            OnClosedWebView = webViewData.OnClosed;
         }
 
         // WebViewの初期化。
@@ -82,24 +82,24 @@ public class WebViewController : MonoBehaviour
                     webView.LoadURL(msg);
                     return;
                 }
-                WebViewURLController.ProcessURL(msg, Close, webViewData.CustomCallbackData);
+                WebViewURLController.ProcessURL(msg, CloseWebView, webViewData.CustomCallbackData);
             },
 
             // エラー時。
             err:(msg) =>
             {
-                if(webViewData.OnErrorCallback != null)
+                if(webViewData.OnError != null)
                 {
-                    webViewData.OnErrorCallback(WebViewStatus.ACCESS_FAILUER);
+                    webViewData.OnError(WebViewStatus.ACCESS_FAILUER);
                 }
             },
 
             // Httpeエラー。
             httpErr:(msg) =>
             {
-                if(webViewData.OnErrorCallback != null)
+                if(webViewData.OnError != null)
                 {
-                    webViewData.OnErrorCallback(WebViewStatus.HTTP_ERROR);
+                    webViewData.OnError(WebViewStatus.HTTP_ERROR);
                 }
             },
 
@@ -109,9 +109,9 @@ public class WebViewController : MonoBehaviour
                 webView.EvaluateJS(@"
                     document.body.style.background = 'white';
                 ");
-                if(webViewData.OnOpenCallback != null)
+                if(webViewData.OnOpened != null)
                 {
-                    webViewData.OnOpenCallback();
+                    webViewData.OnOpened();
                 }
             },
             enableWKWebView:true
@@ -155,16 +155,16 @@ public class WebViewController : MonoBehaviour
     /// <summary>
     /// WebViewを閉じる。
     /// </summary>
-    public void Close()
+    public void CloseWebView()
     {
         if(webView != null)
         {
             webView.SetVisibility(false);
             Destroy(webView.gameObject);
             webView = null;
-            if(OnCompleteCloseCallback != null)
+            if(OnClosedWebView != null)
             {
-                OnCompleteCloseCallback();
+                OnClosedWebView();
             }
         }
     }
