@@ -23,17 +23,17 @@ public class WebViewURLController
     /// <summary>
     /// WebViewを閉じる処理。
     /// </summary>
-    static System.Action OnWebViewCloseAction = delegate{};
+    static System.Action OnClosedWebView = delegate{};
 
     /// <summary>
     /// URLを処理する。
     /// </summary>
     /// <param name="url">URL。</param>
-    /// <param name="webViewCloseAction">WebViewを閉じる処理。</param>
+    /// <param name="onClosedWebView">WebViewを閉じたときのイベント。</param>
     /// <param name="customCallbackData">カスタムコールバックデータ。</param>
-    public static void ProcessURL(string url, System.Action webViewCloseAction, Dictionary<string, System.Action> customCallbackData = null)
+    public static void ProcessURL(string url, System.Action onClosedWebView, Dictionary<string, System.Action> customCallbackData = null)
     {
-        OnWebViewCloseAction = webViewCloseAction;
+        OnClosedWebView = onClosedWebView;
 
         if(string.IsNullOrEmpty(url))
         {
@@ -116,7 +116,7 @@ public class WebViewURLController
         switch(scheme)
         {
             case WEBVIEW_CLOSE_SCHEME:
-                OnWebViewCloseAction();
+                OnClosedWebView();
                 return true;
             case BROWSER_OPEN:
                 Application.OpenURL(param);
